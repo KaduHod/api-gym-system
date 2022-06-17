@@ -16,7 +16,7 @@ class AlunoController extends Controller{
                         .send({message: 'Ok', data})
         } catch (error) {
             return res.status(500)
-                        .send({message:'Inertnal Server Error', error})
+                        .send({message:'Inernal Server Error', error})
         }
     }
 
@@ -31,7 +31,7 @@ class AlunoController extends Controller{
                     profile : true,
                     treinos : {
                         include : {
-                            exercicios : {
+                            exercicios  : {
                                 include : {
                                     exercicio : true
                                 }
@@ -52,7 +52,7 @@ class AlunoController extends Controller{
         } catch (error) {
 
             return res.status(500)
-                        .send({message:'Inertnal Server Error', error})
+                        .send({message:'Internal Server Error', error})
         }
     }
 
@@ -65,13 +65,13 @@ class AlunoController extends Controller{
         } catch (error) {
 
             return res.status(500)
-                        .send({message:'Inertnal Server Error', error})
+                        .send({message:'Internal Server Error', error})
         }
     }
 
     public async update(req:Request, res:Response){
 
-        const alunoId:number = req.body.alunoId
+        const alunoId:number = parseInt(req.body.alunoId)
         const periodizacao:string = req.body.periodizacao
 
         const data:object = {
@@ -80,20 +80,21 @@ class AlunoController extends Controller{
 
         try {
             const query = await db.aluno.update({
-                where : { id : alunoId },
-                data
+                where : { id : alunoId }
+                //data
             })
 
             return res.status(201)  
                         .send({message: 'Ok', data })
 
         } catch (error) {
-            
+            return res.status(500)
+                        .send({message:'Internal Server Error', error})
         }
     }
 
     public async delete(req:Request, res:Response){
-        const { alunoId } = req.body
+        const alunoId:number = parseInt(req.body.alunoId)
 
         try {
             const data = await db.aluno.delete({ where : {id : alunoId} })
@@ -109,13 +110,13 @@ class AlunoController extends Controller{
 
     public async attachProfessor(req:Request, res:Response){
 
-        const professorId:number = req.body.professorId
-        const alunoId:number     = req.body.alunoId
+        const professorId:number = parseInt(req.body.professorId)
+        const alunoId:number     = parseInt(req.body.alunoId)
 
         try {
             const query = await db.aluno.update({
                 where : {id : alunoId},
-                data : {
+                data  : {
                     professores : {
                         connect : [{ id : professorId}]
                     }   
@@ -131,13 +132,13 @@ class AlunoController extends Controller{
     
     public async unlinkProfessor(req:Request, res:Response){
 
-        const alunoId:number     = req.body.alunoId
-        const professorId:number = req.body.professorId
+        const alunoId:number     = parseInt(req.body.alunoId)
+        const professorId:number = parseInt(req.body.professorId)
 
         try {
             const query = await db.aluno.update({
                 where : { id : alunoId},
-                data : {
+                data  : {
                     professores : {
                         disconnect : [{id : professorId}]
                     }
@@ -155,13 +156,13 @@ class AlunoController extends Controller{
 
     public async attachProfile(req:Request, res:Response){
 
-        const profileId:number = req.body.profileId
-        const alunoId:number   = req.body.alunoId
+        const profileId:number = parseInt(req.body.profileId)
+        const alunoId:number   = parseInt(req.body.alunoId)
 
         try {
             const query = await db.aluno.update({
                 where : {id : alunoId},
-                data : {
+                data  : {
                     profile : {
                         connect : { id : profileId }
                     }
@@ -177,12 +178,12 @@ class AlunoController extends Controller{
 
     public async unlinkProfile(req:Request, res:Response){
 
-        const alunoId:number   = req.body.alunoId
+        const alunoId:number   = parseInt(req.body.alunoId)
 
         try {
             const query = await db.aluno.update({
                 where : {id : alunoId},
-                data : {
+                data  : {
                     profile : {
                         disconnect : true
                     }
