@@ -1,6 +1,7 @@
 import express             from 'express';
 import AlunoController     from '../controllers/AlunoController';
 import ProfessorController from '../controllers/ProfessorController';
+import ProfileController   from '../controllers/ProfileController';
 import LoginController     from '../controllers/LoginController';
 import RegisterController  from '../controllers/RegisterController';
 import ExercicioController from '../controllers/ExercicioController';
@@ -12,20 +13,34 @@ route.get('/aluno/:id',                 AlunoController.aluno)
 route.get('/alunos',                    AlunoController.alunos)
 route.post('/aluno',                    AlunoController.create)
 route.put('/aluno',                     AlunoController.update)
-route.delete('/aluno',                  AlunoController.delete)
 route.post('/aluno/attach-professor',   AlunoController.attachProfessor)
-route.patch('/aluno/detach-professor',  AlunoController.unlinkProfessor)
+route.patch('/aluno/detach-professor',  AlunoController.detachProfessor)
 route.post('/aluno/attach-profile',     AlunoController.attachProfile)
-route.patch('/aluno/detach-profile',    AlunoController.unlinkProfile)
+route.patch('/aluno/detach-profile',    AlunoController.detachProfile)
+route.delete('/aluno',                  AlunoController.delete)
  
-route.get('/professor/:id',             ProfessorController.index)
-route.post('professor',                 ProfessorController.index)
-route.put('professor',                  ProfessorController.index)
-route.get('/professor/alunos',          ProfessorController.index)
-route.post('/professor/aluno',          ProfessorController.index)
-route.delete('/professor/aluno',        ProfessorController.index)
+route.get('/professor',                 ProfessorController.create)
+route.get('/professores',               ProfessorController.professores)
+route.get('/professor/alunos',          ProfessorController.alunos)
+route.patch('/professor/attach-aluno',  ProfessorController.attachAluno)
+route.patch('/professor/detach-aluno',  ProfessorController.detachAluno)
+route.patch('/professor/attach-profile',ProfessorController.attachProfile)
+route.patch('/professor/detach-profile',ProfessorController.detachProfile)
+route.delete('/professor',              ProfessorController.delete)
+route.delete('/professor/aluno',        ProfessorController.delete)
+
+route.get('/profiles',                  ProfileController.all)
+route.post('/profile',                  ProfileController.create)
+route.put('/profile',                   ProfileController.update)
+route.patch('/profile/attach-aluno',    ProfileController.attachToAluno)
+route.patch('/profile/detach-aluno',    ProfileController.detachFromAluno)
+route.patch('/profile/attach-professor',ProfileController.attachToProfessor)
+route.patch('/profile/detach-professor',ProfileController.detachFromProfessor)
+route.delete('/profile',                ProfileController.delete)
+
+
         
-route.get('/exercicio',                 ExercicioController.index)
+/* route.get('/exercicio',                 ExercicioController.index)
 route.post('/exercicio',                ExercicioController.index)
 route.put('/exercicio',                 ExercicioController.index)
 route.delete('/exercicio',              ExercicioController.index)
@@ -36,7 +51,7 @@ route.put('/treino',                    TreinoController.index)
 route.delete('/treino',                 TreinoController.index)
 
 route.get('/login', LoginController.index)
-route.get('/resgiter', RegisterController.index)
+route.get('/resgiter', RegisterController.index) */
 
 
 export default route;

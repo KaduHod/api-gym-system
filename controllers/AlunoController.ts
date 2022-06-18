@@ -4,7 +4,7 @@ import db from '../database/prisma/client';
 
 class AlunoController extends Controller{
 
-    public async alunos(res:Response){
+    public async alunos(req:Request, res:Response){
         try {
             const data = await db.aluno.findMany({
                 include : {
@@ -79,11 +79,11 @@ class AlunoController extends Controller{
         }
 
         try {
-            const query = await db.aluno.update({
+            /* const query = await db.aluno.update({
                 where : { id : alunoId }
                 //data
             })
-
+ */
             return res.status(201)  
                         .send({message: 'Ok', data })
 
@@ -130,7 +130,7 @@ class AlunoController extends Controller{
         }
     }
     
-    public async unlinkProfessor(req:Request, res:Response){
+    public async  detachProfessor(req:Request, res:Response){
 
         const alunoId:number     = parseInt(req.body.alunoId)
         const professorId:number = parseInt(req.body.professorId)
@@ -176,7 +176,7 @@ class AlunoController extends Controller{
         }
     }
 
-    public async unlinkProfile(req:Request, res:Response){
+    public async detachProfile(req:Request, res:Response){
 
         const alunoId:number   = parseInt(req.body.alunoId)
 

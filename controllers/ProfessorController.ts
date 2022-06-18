@@ -4,8 +4,24 @@ import db from '../database/prisma/client';
 
 class ProfessorController extends Controller{
 
+    public async professores(req:Request, res:Response){
+        try {
+            const professores = await db.professor.findMany({
+                include : {
+                    profile : true
+                }
+            })
 
-    public async create(res:Response){
+            return res.status(200)
+                    .send({message: 'Ok', professores})
+        } catch (error) {
+            return res.status(500)
+                        .send({message: 'Internal Server Error', error})
+        }
+        
+    }
+
+    public async create(req:Request, res:Response){
         try {
             const data = await db.professor.create({data : {}})
 
@@ -18,7 +34,25 @@ class ProfessorController extends Controller{
         }
     }
 
-    public async attachAluno(req: Request, res: Response){
+    public async delete(req:Request, res:Response){
+        const professorId:number = parseInt(req.body.professorId)
+
+        try {
+            const del = await db.professor.delete({
+                where: {id : professorId}
+            })
+
+            return res.status(200)
+                        .send({message:'OK', data:del})
+        } catch (error) {
+
+            return res.status(500)
+                        .send({message: 'Internal Server Error', error})
+        }
+    }
+
+    public async attachAluno(req:Request, res:Response){
+
         const professorId:number = parseInt(req.body.professorId)
         const alunoId:number = parseInt(req.body.alunoId)
 
@@ -41,7 +75,8 @@ class ProfessorController extends Controller{
         }
     }
 
-    public async unlinkAluno (req: Request, res:Response){
+    public async detachAluno (req:Request, res:Response){
+
         const professorId:number = parseInt(req.body.professorId)
         const alunoId:number = parseInt(req.body.alunoId)
 
@@ -56,7 +91,7 @@ class ProfessorController extends Controller{
             })
 
             return res.status(200)
-                        .send({message: 'ok', data})
+                        .send({message: 'Ok', data})
         } catch (error) {
                         
             return res.status(500)
@@ -64,11 +99,12 @@ class ProfessorController extends Controller{
         }
     }
 
-    public async alunos(req: Request, res:Response){
+    public async alunos (req:Request, res:Response){
+        
         const professorId:number = parseInt(req.body.professorId)
 
         try {
-            const data = await db.professor.findMany({
+            const data = await db.professor.findFirst({
                 where : { id : professorId },
                 include : {
                     alunos : true
@@ -77,12 +113,60 @@ class ProfessorController extends Controller{
             })
 
             return res.status(200)
-                        .send({ message: 'Ok', data : data.alunos })
+                        .send({ message: 'Ok', data : data })
         } catch (error) {
 
             return res.status(500)
                         .send({message: 'Internal Server Error', error})
-        }
+        } 
+    }
+
+    public async attachProfile (req:Request, res:Response){
+        const professorId:number = parseInt(req.body.professorId)
+        const profileId:number = parseInt(req.body.profileId)
+
+        try {   
+            const data = await db.professor.update({
+                where : { id : profileId },
+                data : {
+                    profile : {
+                        connect : {id : professorId}
+                    }
+                }
+
+            })
+
+            return res.status(200)
+                        .send({ message: 'Ok', data : data })
+        } catch (error) {
+
+            return res.status(500)
+                        .send({message: 'Internal Server Error', error})
+        } 
+        
+    }
+
+    public async detachProfile (req:Request, res:Response){
+        const professorId:number = parseInt(req.body.professorId)
+        
+        try {   
+            const data = await db.professor.update({
+                where : { id : professorId },
+                data : {
+                    profile : {
+                        disconnect : true
+                    }
+                }
+
+            })
+
+            return res.status(200)
+                        .send({ message: 'Ok', data : data })
+        } catch (error) {
+
+            return res.status(500)
+                        .send({message: 'Internal Server Error', error})
+        } 
     }
 
     

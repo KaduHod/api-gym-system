@@ -3,6 +3,8 @@ import routes from './routes/routes'
 
 const api = express();
 
+api.use(express.json());
+api.use(express.urlencoded());
 api.use(routes)
 
 const port = 9999 || 9090;

@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -60,7 +60,6 @@ model Periodizacao{
 model Treino {
   id               Int                @id @default(autoincrement())
   nome             String             @db.VarChar(255)
-      
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
   descricao        String?
