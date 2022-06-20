@@ -7,7 +7,7 @@ class ProfileController extends Controller{
 
 
     public async all(req:Request, res:Response){
-        const allProfiles = await db.profile.findMany()
+        const allProfiles:object | null = await db.profile.findMany()
         res.send(allProfiles)
     }
 
@@ -25,7 +25,7 @@ class ProfileController extends Controller{
         const senhaHash:string = crypt.makeHash(senha)
 
         try {
-            const data = await db.profile.create({
+            const data:object | null = await db.profile.create({
                 data : {
                     nome, 
                     email, 
@@ -76,7 +76,7 @@ class ProfileController extends Controller{
 
         try {
 
-            const data = await db.profile.update({
+            const data:object | null = await db.profile.update({
                 where : {id : profileId},
                 data : {
                     aluno : {
@@ -100,7 +100,7 @@ class ProfileController extends Controller{
 
         try {
 
-            const data = await db.profile.update({
+            const data:object |  null = await db.profile.update({
                 where : {id : profileId},
                 data : {
                     professor : {
@@ -123,7 +123,7 @@ class ProfileController extends Controller{
 
         try {
 
-            const data = await db.profile.update({
+            const data:object = await db.profile.update({
                 where : {id : profileId},
                 data : {
                     professor : {
@@ -145,7 +145,7 @@ class ProfileController extends Controller{
         const profileId:number = parseInt(req.body.profileId)
 
         try {
-            const data = await db.profile.delete({
+            const data:object |  null = await db.profile.delete({
                 where : {id : profileId}
             })
 
@@ -162,40 +162,41 @@ class ProfileController extends Controller{
         const profileId:number = parseInt(req.body.profileId)
 
         try {
-            const profile = await db.profile.findFirst({
+            const profile:object | any = await db.profile.findFirst({
                 where : {id : profileId}
             })
 
-            if(profile){
-                const email:string        = req.body.email                    || profile.email
-                const senha:string        = req.body.senha                    || profile.senha
-                const dataNascimento:Date = new Date(req.body.dataNascimento) || profile.dataNascimento
-                const cpf:string          = req.body.cpf                      || profile.cpf
-                const nome:string         = req.body.nome                     || profile.nome
-                const telefone:string     = req.body.telefone                 || profile.telefone
-                const image:string        = req.body.image                    || profile.image
-        
-                const senhaHash:string = crypt.makeHash(senha)
-                
-                const data = await db.profile.update({
-                    where : {id : profileId},
-                    data : {
-                        nome, 
-                        email, 
-                        senha : senhaHash, 
-                        dataNascimento, 
-                        cpf, 
-                        telefone, 
-                        image
-                    }
-                }) 
-    
-                return res.status(200)
-                            .send({message: 'Ok' }) 
-            }
+            if(!profile) return res.status(500).send({message : 'Profile inválido'})
 
-            return res.status(500)
-                        .send({message : 'Profile inválido'})
+            
+            const email:string        = req.body.email                    || profile.email
+            const senha:string        = req.body.senha                    || profile.senha
+            const dataNascimento:Date = new Date(req.body.dataNascimento) || profile.dataNascimento
+            const cpf:string          = req.body.cpf                      || profile.cpf
+            const nome:string         = req.body.nome                     || profile.nome
+            const telefone:string     = req.body.telefone                 || profile.telefone
+            const image:string        = req.body.image                    || profile.image
+    
+            const senhaHash:string = crypt.makeHash(senha)
+            
+            const data:object | null = await db.profile.update({
+                where : {id : profileId},
+                data : {
+                    nome, 
+                    email, 
+                    senha : senhaHash, 
+                    dataNascimento, 
+                    cpf, 
+                    telefone, 
+                    image
+                }
+            }) 
+
+            return res.status(200)
+                        .send({message: 'Ok' }) 
+            
+
+            
             
         } catch (error) {
 

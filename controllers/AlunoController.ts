@@ -6,7 +6,7 @@ class AlunoController extends Controller{
 
     public async alunos(req:Request, res:Response){
         try {
-            const data = await db.aluno.findMany({
+            const data:object = await db.aluno.findMany({
                 include : {
                     profile : true
                 }
@@ -25,7 +25,7 @@ class AlunoController extends Controller{
         const id:number = parseInt(req.params.id);
         
         try {
-            const data = await db.aluno.findFirst({ 
+            const data:object | null = await db.aluno.findFirst({ 
                 where : {id},
                 include : { 
                     profile : true,
@@ -58,7 +58,7 @@ class AlunoController extends Controller{
 
     public async create(req:Request, res:Response){
         try {
-            const aluno = await db.aluno.create({data : {}})
+            const aluno:object = await db.aluno.create({data : {}})
 
             return res.status(201)  
                         .send({message: 'Ok', data : aluno})
@@ -97,7 +97,7 @@ class AlunoController extends Controller{
         const alunoId:number = parseInt(req.body.alunoId)
 
         try {
-            const data = await db.aluno.delete({ where : {id : alunoId} })
+            const data:object = await db.aluno.delete({ where : {id : alunoId} })
 
             return res.status(201)  
                         .send({message: 'Ok', data })
@@ -114,7 +114,7 @@ class AlunoController extends Controller{
         const alunoId:number     = parseInt(req.body.alunoId)
 
         try {
-            const query = await db.aluno.update({
+            const query:object = await db.aluno.update({
                 where : {id : alunoId},
                 data  : {
                     professores : {
@@ -136,7 +136,7 @@ class AlunoController extends Controller{
         const professorId:number = parseInt(req.body.professorId)
 
         try {
-            const query = await db.aluno.update({
+            const query:object = await db.aluno.update({
                 where : { id : alunoId},
                 data  : {
                     professores : {
@@ -160,7 +160,7 @@ class AlunoController extends Controller{
         const alunoId:number   = parseInt(req.body.alunoId)
 
         try {
-            const query = await db.aluno.update({
+            const query:object = await db.aluno.update({
                 where : {id : alunoId},
                 data  : {
                     profile : {
@@ -181,7 +181,7 @@ class AlunoController extends Controller{
         const alunoId:number   = parseInt(req.body.alunoId)
 
         try {
-            const query = await db.aluno.update({
+            const query:object = await db.aluno.update({
                 where : {id : alunoId},
                 data  : {
                     profile : {

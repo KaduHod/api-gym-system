@@ -6,7 +6,7 @@ class ProfessorController extends Controller{
 
     public async professores(req:Request, res:Response){
         try {
-            const professores = await db.professor.findMany({
+            const professores:object = await db.professor.findMany({
                 include : {
                     profile : true
                 }
@@ -38,7 +38,7 @@ class ProfessorController extends Controller{
         const professorId:number = parseInt(req.body.professorId)
 
         try {
-            const del = await db.professor.delete({
+            const del:object = await db.professor.delete({
                 where: {id : professorId}
             })
 
@@ -57,7 +57,7 @@ class ProfessorController extends Controller{
         const alunoId:number = parseInt(req.body.alunoId)
 
         try {
-            const data = await db.professor.update({
+            const data:object = await db.professor.update({
                 where : {id : professorId},
                 data : {
                     alunos : {
@@ -81,7 +81,7 @@ class ProfessorController extends Controller{
         const alunoId:number = parseInt(req.body.alunoId)
 
         try {
-            const data = await db.professor.update({
+            const data:object | null = await db.professor.update({
                 where : {id : professorId},
                 data : {
                     alunos : {
@@ -104,7 +104,7 @@ class ProfessorController extends Controller{
         const professorId:number = parseInt(req.body.professorId)
 
         try {
-            const data = await db.professor.findFirst({
+            const data:object | null = await db.professor.findFirst({
                 where : { id : professorId },
                 include : {
                     alunos : true
@@ -126,7 +126,7 @@ class ProfessorController extends Controller{
         const profileId:number = parseInt(req.body.profileId)
 
         try {   
-            const data = await db.professor.update({
+            const data:object | null = await db.professor.update({
                 where : { id : profileId },
                 data : {
                     profile : {
@@ -150,7 +150,7 @@ class ProfessorController extends Controller{
         const professorId:number = parseInt(req.body.professorId)
         
         try {   
-            const data = await db.professor.update({
+            const data:object | null = await db.professor.update({
                 where : { id : professorId },
                 data : {
                     profile : {
