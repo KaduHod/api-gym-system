@@ -96,7 +96,7 @@ class ProfileController extends Controller{
     
     public async attachToProfessor(req:Request, res:Response){
         const profileId:number = parseInt(req.body.profileId)
-        const professorId:number = parseInt(req.body.alunoId)
+        const professorId:number = parseInt(req.body.professorId)
 
         try {
 

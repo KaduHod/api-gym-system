@@ -8,102 +8,93 @@ datasource db {
 }
 
 model Profile {
-  id                Int               @id @default(autoincrement())
-  alunoId           Int?              @unique
-  professorId       Int?              @unique
-  type              String?       
-  email             String            @unique
-  senha             String
-  dataNascimento    DateTime?
-  cpf               String?
-  nome              String?
-  telefone          String?
-  image             String?
-  aluno             Aluno?            @relation(fields: [alunoId], references: [id])
-  professor         Professor?        @relation(fields: [professorId], references: [id])
-}       
+  id             Int        @id @default(autoincrement())
+  alunoId        Int?       @unique
+  professorId    Int?       @unique
+  type           String?
+  email          String     @unique
+  senha          String
+  dataNascimento DateTime?
+  cpf            String?
+  nome           String?
+  telefone       String?
+  image          String?
+  aluno          Aluno?     @relation(fields: [alunoId], references: [id])
+  professor      Professor? @relation(fields: [professorId], references: [id])
+}
 
 model Aluno {
-  id                Int               @id @default(autoincrement())
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  profile           Profile?
-  periodizacoes     Periodizacao[]
-  professores       Professor[]
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  profile       Profile?
+  periodizacoes Periodizacao[]
+  professores   Professor[]
 }
 
 model Professor {
-  id               Int                @id @default(autoincrement())
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  creef            String?
-  exercicios       Exercicios[]
-  profile          Profile?
-  periodizacoes    Periodizacao[]
-  alunos           Aluno[]
+  id            Int            @id @default(autoincrement())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  creef         String?
+  exercicios    Exercicio[]
+  profile       Profile?
+  periodizacoes Periodizacao[]
+  alunos        Aluno[]
 }
 
 //referente a treinos A, B, C, D, E e etc
-model Periodizacao{
-  id               Int                @id @default(autoincrement())
-  treinos          Treino[] 
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  aluno            Aluno?             @relation(fields: [alunoId], references: [id])
-  professor        Professor          @relation(fields: [professorId], references: [id])
-  alunoId          Int?
-  professorId      Int
+model Periodizacao {
+  id          Int       @id @default(autoincrement())
+  treinos     Treino[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  aluno       Aluno?    @relation(fields: [alunoId], references: [id])
+  professor   Professor @relation(fields: [professorId], references: [id])
+  alunoId     Int?
+  professorId Int
 
 }
 
 //Referente a o trieno de um dia
 model Treino {
-  id               Int                @id @default(autoincrement())
-  nome             String             @db.VarChar(255)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  descricao        String?
-  aquecimento      String?
-  exercicios       Exercicio[]
-  periodizacao     Periodizacao?      @relation(fields: [periodizacaoId], references: [id])
-  periodizacaoId   Int?
-}
-
-model Exercicios {
-  id               Int                @id @default(autoincrement())
-  nome             String             @db.VarChar(255)
-  descricao        String?
-  video            String?            @db.VarChar(255)
-  tipoId           Int?
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  imagem           String?
-  criador          Professor          @relation(fields: [professorId], references: [id])
-  tipo             TipoExercicio?     @relation(fields: [tipoId], references: [id])
-  professorId      Int
-  treinos          Exercicio[]
+  id             Int           @id @default(autoincrement())
+  nome           String        @db.VarChar(255)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  descricao      String?
+  aquecimento    String?
+  exercicios     Exercicio[]
+  periodizacao   Periodizacao? @relation(fields: [periodizacaoId], references: [id])
+  periodizacaoId Int?
+  exerciciosId   Int?
 }
 
 model Exercicio {
-  id               Int                @id @default(autoincrement())
-  exercicioId      Int
-  series           Int
-  repeticoes       Int
-  treinoId         Int
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  exercicio        Exercicios         @relation(fields: [exercicioId], references: [id])
-  treino           Treino             @relation(fields: [treinoId], references: [id])
+  id          Int            @id @default(autoincrement())
+  nome        String         @db.VarChar(255)
+  descricao   String?
+  musculo     String?
+  video       String?        @db.VarChar(255)
+  tipoId      Int?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  imagem      String?
+  professor     Professor?      @relation(fields: [professorId], references: [id])
+  tipo        TipoExercicio? @relation(fields: [tipoId], references: [id])
+  professorId   Int?
+  treinos     Treino[]
 }
 
+
 model TipoExercicio {
-  id               Int                @id @default(autoincrement())
-  descricao        String             @db.VarChar(255)
-  nome             String             @db.Char(11)
-  exercicios       Exercicios[]       
+  id         Int          @id @default(autoincrement())
+  descricao  String       @db.VarChar(255)
+  nome       String       @db.Char(11)
+  exercicios Exercicio[]
 }
 
 model Execucao {
-  id               Int                @id @default(autoincrement())
-  descricao        String             @db.VarChar(255)
+  id        Int    @id @default(autoincrement())
+  descricao String @db.VarChar(255)
 }

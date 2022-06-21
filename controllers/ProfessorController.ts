@@ -8,7 +8,12 @@ class ProfessorController extends Controller{
         try {
             const professores:object = await db.professor.findMany({
                 include : {
-                    profile : true
+                    profile : true,
+                    alunos : {
+                        include : {
+                            profile : true
+                        }
+                    }
                 }
             })
 

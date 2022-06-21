@@ -8,7 +8,12 @@ class AlunoController extends Controller{
         try {
             const data:object = await db.aluno.findMany({
                 include : {
-                    profile : true
+                    profile : true,
+                    professores : {
+                        include : {
+                            profile : true
+                        }
+                    }
                 }
             })
 
@@ -25,19 +30,10 @@ class AlunoController extends Controller{
         const id:number = parseInt(req.params.id);
         
         try {
-            const data:object | null = await db.aluno.findFirst({ 
+            const data:object | null    = await db.aluno.findFirst({ 
                 where : {id},
                 include : { 
                     profile : true,
-                    treinos : {
-                        include : {
-                            exercicios  : {
-                                include : {
-                                    exercicio : true
-                                }
-                            }
-                        }
-                    },
                     professores : { 
                         include : {
                             profile : true
