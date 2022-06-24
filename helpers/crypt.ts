@@ -14,6 +14,6 @@ import bcrypt from 'bcrypt'
  * @param {*} pwdDB senha do DB
  * @returns Ve se senha do formulario é igual a do DB
  */
-const compareHash = (pwd:string, pwdDB:string) =>  bcrypt.compareSync(pwd, pwdDB) 
+const compareHash = (pwd:string, pwdDB:string) => bcrypt.compareSync(pwd, pwdDB) 
 
 export default { makeHash, compareHash }

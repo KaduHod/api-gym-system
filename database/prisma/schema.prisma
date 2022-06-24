@@ -40,19 +40,23 @@ model Professor {
   exercicios    Exercicio[]
   profile       Profile?
   periodizacoes Periodizacao[]
+  treinos       Treino[]
   alunos        Aluno[]
+  
 }
 
 //referente a treinos A, B, C, D, E e etc
 model Periodizacao {
-  id          Int       @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
+  dias        Int?
+  nome        String?    @db.VarChar(255)
   treinos     Treino[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  aluno       Aluno?    @relation(fields: [alunoId], references: [id])
-  professor   Professor @relation(fields: [professorId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  aluno       Aluno?     @relation(fields: [alunoId], references: [id])
+  professor   Professor? @relation(fields: [professorId], references: [id])
   alunoId     Int?
-  professorId Int
+  professorId Int?
 
 }
 
@@ -66,8 +70,9 @@ model Treino {
   aquecimento    String?
   exercicios     Exercicio[]
   periodizacao   Periodizacao? @relation(fields: [periodizacaoId], references: [id])
+  professor      Professor?    @relation(fields: [professorId], references: [id])
+  professorId    Int?
   periodizacaoId Int?
-  exerciciosId   Int?
 }
 
 model Exercicio {
@@ -80,17 +85,17 @@ model Exercicio {
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   imagem      String?
-  professor     Professor?      @relation(fields: [professorId], references: [id])
+  professor   Professor?     @relation(fields: [professorId], references: [id])
   tipo        TipoExercicio? @relation(fields: [tipoId], references: [id])
-  professorId   Int?
+  professorId Int?
   treinos     Treino[]
 }
 
 
 model TipoExercicio {
-  id         Int          @id @default(autoincrement())
-  descricao  String       @db.VarChar(255)
-  nome       String       @db.Char(11)
+  id         Int              @id @default(autoincrement())
+  descricao  String           @db.VarChar(255)
+  nome       String           @db.Char(11)
   exercicios Exercicio[]
 }
 
