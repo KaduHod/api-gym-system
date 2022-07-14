@@ -5,6 +5,32 @@ import crypt from '../helpers/crypt';
 
 class ProfileController extends Controller{
 
+    public async search(req:Request, res:Response){
+        const id:number = parseInt(req.params.id)
+
+        try {
+            const profile:object | null = await db.profile.findUnique({
+                where : {id},
+                include : {
+                    professor : {
+                        include : {
+                            alunos : true,
+                            treinos: true,
+                            periodizacoes : true,
+                            exercicios : true
+                        }
+                    }
+                }
+            })
+
+            return res.status(200)
+                        .send({message: 'Ok', profile }) 
+        } catch (error) {
+
+            return res.status(500)
+                        .send({message:'Não foi possível achar o perfil', error})
+        }
+    }
 
     public async all(req:Request, res:Response){
         const allProfiles:object | null = await db.profile.findMany()
@@ -202,6 +228,20 @@ class ProfileController extends Controller{
 
             return res.status(500)
                         .send({message : 'Não foi possível atualizar profile', error})
+        }
+    }
+
+    public async validateEmail(req:Request, res:Response){
+        const email:string = req.body.email
+
+        try {
+            const query = await db.profile.findUnique({where : {email}})
+            
+            const resposta = query ? true : false
+
+            res.send({alreadyInUse : resposta})
+        } catch (error) {
+            res.send({message:'Error in the query', error})
         }
     }
 }

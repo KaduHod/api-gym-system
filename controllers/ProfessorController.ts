@@ -66,7 +66,7 @@ class ProfessorController extends Controller{
                 where : {id : professorId},
                 data : {
                     alunos : {
-                        connect : [{id : alunoId}]
+                        connect : {id : alunoId}
                     }
                 }
             })
@@ -76,7 +76,7 @@ class ProfessorController extends Controller{
         } catch (error) {
             
             return res.status(500)
-                        .send({message:'Internal Server Error', error})
+                        .send({message:'Não foi possível adicionar professor ao aluno', error})
         }
     }
 
@@ -106,19 +106,23 @@ class ProfessorController extends Controller{
 
     public async alunos (req:Request, res:Response){
         
-        const professorId:number = parseInt(req.body.professorId)
+        const professorId:number = parseInt(req.params.id)
 
         try {
             const data:object | null = await db.professor.findFirst({
                 where : { id : professorId },
                 include : {
-                    alunos : true
+                    alunos : {
+                        include : {
+                            profile : true
+                        }
+                    },
                 }
                 
             })
 
             return res.status(200)
-                        .send({ message: 'Ok', data : data })
+                        .send({ message: 'Ok', data })
         } catch (error) {
 
             return res.status(500)
@@ -173,8 +177,6 @@ class ProfessorController extends Controller{
                         .send({message: 'Internal Server Error', error})
         } 
     }
-
-    
 }
 
 export default new ProfessorController();

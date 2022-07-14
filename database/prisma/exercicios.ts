@@ -124,7 +124,6 @@ const exercicios = [
         descricao: 'Em suma, o exercício paralelas é essencial para quem quer ter tríceps maiores e mais fortes, e mesmo que o seu objetivo primário não seja este, tenha em mente que o tríceps compõe mais da metade do tamanho dos braços. Logo, ficar bom nas paralelas = tríceps grandes.',
         musculo:'Tríceps'
     }
-
 ]
 
 export default exercicios;

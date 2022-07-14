@@ -10,14 +10,41 @@ class TreinoController extends Controller{
             }
         })
 
-        res.send(query)
+        res.send({message : 'Ok', treinos : query})
+    }
+
+    public async treinos (req:Request, res:Response){
+        const professorId:number = parseInt(req.params.professorid)
+        
+        try {   
+            const data:object | null = await db.treino.findMany({
+                where : { professorId },
+                include : {
+                    exercicios : {
+                        include: {
+                            exercicio : true
+                        }
+                    }
+                }
+            })
+
+            console.log(data)
+
+            return res.status(200)
+                        .send({ message: 'Ok', data })
+        } catch (error) {
+
+            return res.status(500)
+                        .send({message: 'Errooooo', error})
+        } 
     }
 
     public async create (req:Request, res:Response) {
-        const exerciciosId:Array<number> = req.body.exerciciosId
         const descricao:string = req.body.descricao
         const nome:string = req.body.nome
         const aquecimento:string = req.body.aquecimento
+        const exercicios:Array<any> =req.body.exercicios
+        
 
         try {
             
@@ -27,19 +54,48 @@ class TreinoController extends Controller{
                     descricao,
                     aquecimento,
                     exercicios : {
-                        connect : exerciciosId.map( exercicioId => {return {id : exercicioId} })
+                        createMany : {
+                            data : exercicios
+                        }
                     }
                 }
-            })
-
+            }) 
+            
             return res.status(200)
                         .send({message: 'Ok', treino }) 
+
+            
         } catch (error) {
         
             return res.status(500)
                         .send({message:'Não foi possível criar o treino!', error})
         }
     }
+   public async  createTreinoEExercicios(req:Request, res:Response) {
+    const descricao:string = req.body.descricao
+    const nome:string = req.body.nome
+    const aquecimento:string = req.body.aquecimento
+    const exercicios:Array<object> = req.body.exercicios
+    
+
+    /* try {
+        
+        const treino:object | null = await db.treino.create({
+            data : {
+                nome,
+                descricao,
+                aquecimento,
+            }
+        })
+
+        return res.status(200)
+                    .send({message: 'Ok', treino }) 
+    } catch (error) {
+    
+        return res.status(500)
+                    .send({message:'Não foi possível criar o treino!', error})
+    } */
+   }
 
     public async update (req:Request, res:Response) {
         const descricao:string = req.body.descricao
@@ -174,7 +230,7 @@ class TreinoController extends Controller{
     }
 
     public async attachExercicio (req:Request, res:Response) {
-        const exercicioId:number = req.body.exercicioId
+        const exercicioDoTreinoId:number = req.body.exercicioDoTreinoId
         const treinoId:number = req.body.treinoId
 
         try {
@@ -182,7 +238,7 @@ class TreinoController extends Controller{
                 where : {id : treinoId},
                 data : {
                     exercicios : {
-                       connect : [{id : exercicioId}]
+                       connect : [{id : exercicioDoTreinoId}]
                     }
                 }
             })
@@ -196,7 +252,7 @@ class TreinoController extends Controller{
     }
 
     public async detachFromExercicio (req:Request, res:Response) {
-        const exercicioId:number = req.body.exercicioId
+        const exercicioDoTreinoId:number = req.body.exercicioDoTreinoId
         const treinoId:number = req.body.treinoId
 
         try {
@@ -204,7 +260,7 @@ class TreinoController extends Controller{
                 where : {id : treinoId},
                 data : {
                     exercicios : {
-                       disconnect : [{id : exercicioId}]
+                       disconnect : [{id : exercicioDoTreinoId}]
                     }
                 }
             })

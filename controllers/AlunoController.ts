@@ -9,11 +9,7 @@ class AlunoController extends Controller{
             const data:object = await db.aluno.findMany({
                 include : {
                     profile : true,
-                    professores : {
-                        include : {
-                            profile : true
-                        }
-                    }
+                    professores : true
                 }
             })
 
@@ -114,7 +110,7 @@ class AlunoController extends Controller{
                 where : {id : alunoId},
                 data  : {
                     professores : {
-                        connect : [{ id : professorId}]
+                        connect : { id : professorId}
                     }   
                 }
             })

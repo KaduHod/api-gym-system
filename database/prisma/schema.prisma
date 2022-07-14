@@ -48,7 +48,8 @@ model Professor {
 //referente a treinos A, B, C, D, E e etc
 model Periodizacao {
   id          Int        @id @default(autoincrement())
-  dias        Int?
+  dataInicio  DateTime?   @default(now())
+  dataFim     DateTime?   @updatedAt
   nome        String?    @db.VarChar(255)
   treinos     Treino[]
   createdAt   DateTime   @default(now())
@@ -68,7 +69,7 @@ model Treino {
   updatedAt      DateTime      @updatedAt
   descricao      String?
   aquecimento    String?
-  exercicios     Exercicio[]
+  exercicios     ExercicioDoTreino[]
   periodizacao   Periodizacao? @relation(fields: [periodizacaoId], references: [id])
   professor      Professor?    @relation(fields: [professorId], references: [id])
   professorId    Int?
@@ -88,7 +89,20 @@ model Exercicio {
   professor   Professor?     @relation(fields: [professorId], references: [id])
   tipo        TipoExercicio? @relation(fields: [tipoId], references: [id])
   professorId Int?
-  treinos     Treino[]
+  exerciciosDoTreino ExercicioDoTreino[]
+}
+
+model ExercicioDoTreino {
+  id          Int @id @default(autoincrement())
+  exercicio   Exercicio @relation(fields: [exercicioId], references: [id])
+  exercicioId Int 
+  treino      Treino? @relation(fields: [treinoId], references: [id])
+  treinoId    Int?
+  series      Int?
+  repeticoes  Int?
+  tipoRepeticoes String?
+  tipoSeries  String?
+  
 }
 
 

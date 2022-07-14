@@ -6,7 +6,12 @@ import db from '../database/prisma/client'
 class PeriodizacaoController extends Controller {
 
     public async all (req:Request, res:Response) {
-        const all = await db.periodizacao.findMany({
+        const periodizacoes = await db.periodizacao.findMany({
+            where: {
+                professor : {
+                    id : parseInt(req.params.professorId)
+                }
+            },
             include : {
                 aluno : true,
                 professor : true,
@@ -17,13 +22,20 @@ class PeriodizacaoController extends Controller {
                 }
             }
         })
+        try{
 
-        res.send(all)
+            return res.status(200)
+                        .send({message : 'Ok', periodizacoes})
+
+        } catch (error) {
+            
+            return res.status(500)
+                        .send({message:'Internal Server Error', error})
+        }
     }
 
     public async create (req:Request, res:Response) {
         const professorId:number = req.body.professorId
-        const dias:number = req.body.dias
         const nome:string = req.body.nome
 
         try {
@@ -31,7 +43,6 @@ class PeriodizacaoController extends Controller {
             const query:object | null = await db.periodizacao.create({
                 data : {
                     nome,
-                    dias,
                     professor : {
                         connect : {id : professorId}
                     }
@@ -51,7 +62,6 @@ class PeriodizacaoController extends Controller {
 
     public async update (req:Request, res:Response) {
         const periodizacaoId:number = req.body.periodizacaoId
-        const dias:number = req.body.dias
         const nome:string = req.body.nome
 
         try {
@@ -60,7 +70,6 @@ class PeriodizacaoController extends Controller {
                 where : {id : periodizacaoId},
                 data : {
                     nome,
-                    dias
                 }
             })
 
